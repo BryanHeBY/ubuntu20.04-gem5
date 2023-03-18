@@ -25,10 +25,6 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: hebryan/ubuntu20.04-gem5
-
-      - 
-        name: Build image
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME
       
       -
         name: Build and push
