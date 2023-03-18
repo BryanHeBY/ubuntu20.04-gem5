@@ -16,12 +16,6 @@ RUN useradd --create-home --no-log-init --shell /bin/bash -G sudo user && \
     adduser user sudo && \
     echo 'user:00000' | chpasswd
 
-WORKDIR /home/user
-RUN git clone --depth=1 https://gem5.googlesource.com/public/gem5
-WORKDIR /home/user/gem5
-RUN apt-get install -y python3-dev
-RUN python3 `which scons` build/X86/gem5.opt -j `nproc`
-
 # sshd
 RUN apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
@@ -30,3 +24,10 @@ RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
 
 # entrypoint
 CMD ["/usr/sbin/sshd", "-D"]
+
+# build
+USER user
+WORKDIR /home/user
+RUN git clone --depth=1 https://gem5.googlesource.com/public/gem5
+WORKDIR /home/user/gem5
+RUN python3 `which scons` build/X86/gem5.opt -j `nproc`
