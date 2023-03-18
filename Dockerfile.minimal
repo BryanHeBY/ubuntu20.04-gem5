@@ -6,12 +6,14 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt-get update
 RUN apt-get install -y build-essential git m4 scons zlib1g zlib1g-dev libprotobuf-dev \
-        protobuf-compiler libprotoc-dev libgoogle-perftools-dev python-dev python python3-dev 
+        protobuf-compiler libprotoc-dev libgoogle-perftools-dev python-dev python \
+        python3-dev python3-pip graphviz
+RUN pip3 install pydot
 
 # RUN apt-get -y install libprotobuf-dev protobuf-compiler libgoogle-perftools-dev
 # RUN apt-get -y install libboost-all-dev
 
-WORKDIR /
+WORKDIR /opt
 RUN git clone --depth=1 https://gem5.googlesource.com/public/gem5
-WORKDIR /gem5
+WORKDIR /opt/gem5
 RUN python3 `which scons` build/X86/gem5.opt -j `nproc`
